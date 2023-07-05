@@ -1,29 +1,20 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify
 import numpy as np
-import pandas as pd
-import nltk
-import joblib
-import json
-import random
-import string
-from nltk.stem import WordNetLemmatizer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.preprocessing.text import Tokenizer
+import joblib, os, random, string
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 app = Flask(__name__)
 
 # Define your model and tokenizer here
-chatbot_model = joblib.load('chatbot_model.pkl')
-tokenizer = joblib.load('tokenizer.pkl')
-max_sequence_length = joblib.load('max_sequence_length.pkl')
-le = joblib.load('le.pkl')
-responses = joblib.load('responses.pkl')
+chatbot_model = joblib.load('Model/chatbot_model.pkl')
+tokenizer = joblib.load('Model/tokenizer.pkl')
+max_sequence_length = joblib.load('Model/max_sequence_length.pkl')
+le = joblib.load('Model/le.pkl')
+responses = joblib.load('Model/responses.pkl')
 
 @app.route('/')
 def home():
-    return "hey"
+    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -51,4 +42,4 @@ def chat():
     return {'response': response}
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
